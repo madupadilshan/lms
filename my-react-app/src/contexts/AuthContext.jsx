@@ -248,36 +248,9 @@ export const AuthProvider = ({ children }) => {
 
       console.log('📤 Sending registration data:', registrationData);
 
-      // Try multiple registration endpoints
-      const registerAttempts = [
-        () => apiService.auth.registerStudent(registrationData),
-        () => apiService.auth.register(registrationData),
-        () => apiService.post('/api/auth/register/student', registrationData),
-        () => apiService.post('/api/auth/register', registrationData)
-      ];
-
-      let response = null;
-      let lastError = null;
-
-      for (const attempt of registerAttempts) {
-        try {
-          console.log('🔄 Trying registration endpoint...');
-          response = await attempt();
-          console.log('✅ Registration response:', response);
-          
-          if (response && (response.data || response.status === 200)) {
-            console.log('🎉 Registration successful!');
-            break;
-          }
-        } catch (error) {
-          console.log('❌ Registration attempt failed:', error.response?.status, error.response?.data);
-          lastError = error;
-        }
-      }
-
-      if (!response) {
-        throw lastError || new Error('All registration endpoints failed');
-      }
+      // Try registration endpoint
+      const response = await apiService.auth.registerStudent(registrationData);
+      console.log('✅ Registration response:', response);
       
       return { 
         success: true, 
