@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (loginData) => {
     try {
       console.log('🔐 Attempting login with:', loginData);
-      
+
       const response = await apiService.auth.login({
         email: loginData.email,
         password: loginData.password
@@ -105,13 +105,13 @@ export const AuthProvider = ({ children }) => {
 
     } catch (error) {
       console.error('❌ Login error:', error);
-      
+
       let errorMessage = 'Login failed';
-      
+
       if (error.response) {
         const { status, data } = error.response;
         console.error('📡 Error response:', { status, data });
-        
+
         if (data) {
           if (typeof data === 'string') {
             errorMessage = data;
@@ -123,9 +123,9 @@ export const AuthProvider = ({ children }) => {
             errorMessage = data.data.message;
           }
         }
-        
+
         if (status === 400 || status === 401) {
-          if (errorMessage.toLowerCase().includes('bad credentials') || 
+          if (errorMessage.toLowerCase().includes('bad credentials') ||
               errorMessage.toLowerCase().includes('invalid email or password')) {
             errorMessage = 'Invalid email or password. Please check your credentials.';
           } else {
@@ -141,7 +141,7 @@ export const AuthProvider = ({ children }) => {
       } else {
         errorMessage = error.message || errorMessage;
       }
-      
+
       return { success: false, error: errorMessage };
     }
   };
@@ -149,28 +149,28 @@ export const AuthProvider = ({ children }) => {
   const studentLogin = async (loginData) => {
     try {
       console.log('🎓 Student login attempt:', loginData);
-      
+
       const result = await login(loginData);
-      
+
       if (!result.success) {
         return result;
       }
-      
+
       // Check if user has student role
       if (result.user.role && result.user.role !== 'STUDENT') {
         logout();
-        return { 
-          success: false, 
-          error: 'Access denied: Please use the Teacher/Admin login page.' 
+        return {
+          success: false,
+          error: 'Access denied: Please use the Teacher/Admin login page.'
         };
       }
-      
+
       return result;
     } catch (error) {
       console.error('❌ Student login error:', error);
-      return { 
-        success: false, 
-        error: 'An unexpected error occurred during login' 
+      return {
+        success: false,
+        error: 'An unexpected error occurred during login'
       };
     }
   };
@@ -178,27 +178,27 @@ export const AuthProvider = ({ children }) => {
   const teacherLogin = async (loginData) => {
     try {
       console.log('👨‍🏫 Teacher login attempt:', loginData);
-      
+
       const result = await login(loginData);
-      
+
       if (!result.success) {
         return result;
       }
-      
+
       if (result.user.role !== 'TEACHER' && result.user.role !== 'ADMIN') {
         logout();
-        return { 
-          success: false, 
-          error: 'Access denied: Teacher or Admin credentials required.' 
+        return {
+          success: false,
+          error: 'Access denied: Teacher or Admin credentials required.'
         };
       }
-      
+
       return result;
     } catch (error) {
       console.error('❌ Teacher login error:', error);
-      return { 
-        success: false, 
-        error: 'An unexpected error occurred during login' 
+      return {
+        success: false,
+        error: 'An unexpected error occurred during login'
       };
     }
   };
@@ -206,27 +206,27 @@ export const AuthProvider = ({ children }) => {
   const adminLogin = async (loginData) => {
     try {
       console.log('👑 Admin login attempt:', loginData);
-      
+
       const result = await login(loginData);
-      
+
       if (!result.success) {
         return result;
       }
 
       if (result.user.role !== 'ADMIN') {
         logout();
-        return { 
-          success: false, 
-          error: 'Access denied: Admin credentials required.' 
+        return {
+          success: false,
+          error: 'Access denied: Admin credentials required.'
         };
       }
 
       return result;
     } catch (error) {
       console.error('❌ Admin login error:', error);
-      return { 
-        success: false, 
-        error: 'An unexpected error occurred during login' 
+      return {
+        success: false,
+        error: 'An unexpected error occurred during login'
       };
     }
   };
@@ -234,7 +234,7 @@ export const AuthProvider = ({ children }) => {
   const studentRegister = async (registerData) => {
     try {
       console.log('🎓 Student registration attempt:', registerData);
-      
+
       // Prepare registration data
       const registrationData = {
         name: registerData.name,
@@ -251,21 +251,21 @@ export const AuthProvider = ({ children }) => {
       // Try registration endpoint
       const response = await apiService.auth.registerStudent(registrationData);
       console.log('✅ Registration response:', response);
-      
-      return { 
-        success: true, 
+
+      return {
+        success: true,
         message: 'Registration successful! Please login with your credentials.',
-        data: response.data 
+        data: response.data
       };
     } catch (error) {
       console.error('❌ Registration error:', error);
-      
+
       let errorMessage = 'Registration failed';
-      
+
       if (error.response) {
         const { status, data } = error.response;
         console.error('📡 Error details:', { status, data });
-        
+
         if (status === 400) {
           if (data && data.message) {
             errorMessage = data.message;
@@ -286,9 +286,9 @@ export const AuthProvider = ({ children }) => {
       } else {
         errorMessage = error.message || errorMessage;
       }
-      
+
       errorMessage = errorMessage.replace(/Registration failed:\s*/g, '');
-      
+
       return { success: false, error: errorMessage };
     }
   };
