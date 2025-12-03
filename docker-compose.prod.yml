@@ -45,12 +45,11 @@ services:
       context: ./my-react-app
       dockerfile: Dockerfile.prod
       args:
-        REACT_APP_API_URL: ${API_URL:-http://158.220.119.32/api}
+        REACT_APP_API_URL: ${API_URL:-http://158.220.119.32:3000/api}
     container_name: lms-frontend
     restart: always
     ports:
-      - "80:80"
-      - "443:443"
+      - "3000:80"
     depends_on:
       - backend
     networks:
