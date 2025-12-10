@@ -5,7 +5,7 @@ import axios from 'axios';
 // Simple API URL configuration
 // For production: use '/api' (nginx will proxy to backend)
 // For local development: use 'http://localhost:8080/api'
-const isLocalhost = typeof window !== 'undefined' && 
+const isLocalhost = typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
 const API_BASE_URL = isLocalhost ? 'http://localhost:8080/api' : '/api';

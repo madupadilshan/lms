@@ -17,15 +17,14 @@ public class JwtUtils {
     private final int jwtExpirationMs;
 
     public JwtUtils(
-            @Value("${jwt.secret:defaultSecretKeyForDevelopmentUseOnlyMakeItLongerAndSecure123456789}") String jwtSecret,
-            @Value("${jwt.expiration:86400000}") int jwtExpirationMs
-    ) {
-        // Ensure secret is long enough for HS512
-        String secret = jwtSecret;
-        if (secret.length() < 64) {
-            secret = "defaultSecretKeyForDevelopmentUseOnlyMakeItLongerAndSecure123456789";
+            @Value("${jwt.secret}") String jwtSecret,
+            @Value("${jwt.expiration:86400000}") int jwtExpirationMs) {
+        // Validate secret length for security
+        if (jwtSecret == null || jwtSecret.length() < 64 || jwtSecret.startsWith("REPLACE_WITH")) {
+            throw new IllegalStateException(
+                    "JWT_SECRET environment variable must be set with at least 64 characters for production!");
         }
-        this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.signingKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
         this.jwtExpirationMs = jwtExpirationMs;
     }
 
