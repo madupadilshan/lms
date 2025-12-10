@@ -2,18 +2,26 @@
 -- LMS Database Schema (Clean Version)
 -- No user data - only structure
 -- ============================================
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */
+;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */
+;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */
+;
+/*!50503 SET NAMES utf8mb4 */
+;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */
+;
+/*!40103 SET TIME_ZONE='+00:00' */
+;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */
+;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */
+;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */
+;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */
+;
 -- ============================================
 -- Table: users
 -- ============================================
@@ -23,12 +31,12 @@ CREATE TABLE `users` (
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('STUDENT','TEACHER','ADMIN') NOT NULL DEFAULT 'STUDENT',
+  `role` enum('STUDENT', 'TEACHER', 'ADMIN') NOT NULL DEFAULT 'STUDENT',
   `student_id` varchar(255) DEFAULT NULL,
   `subject` varchar(255) DEFAULT NULL,
   `qualification` varchar(255) DEFAULT NULL,
   `phone` varchar(255) DEFAULT NULL,
-  `status` enum('ACTIVE','INACTIVE') DEFAULT 'ACTIVE',
+  `status` enum('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `course_id` bigint DEFAULT NULL,
@@ -38,8 +46,7 @@ CREATE TABLE `users` (
   KEY `idx_email` (`email`),
   KEY `idx_role` (`role`),
   KEY `idx_student_id` (`student_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 -- ============================================
 -- Table: courses
 -- ============================================
@@ -49,7 +56,7 @@ CREATE TABLE `courses` (
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `category` varchar(255) NOT NULL,
-  `level` enum('BEGINNER','INTERMEDIATE','ADVANCED') NOT NULL DEFAULT 'BEGINNER',
+  `level` enum('BEGINNER', 'INTERMEDIATE', 'ADVANCED') NOT NULL DEFAULT 'BEGINNER',
   `instructor_id` bigint NOT NULL,
   `duration` varchar(255) NOT NULL,
   `students` int DEFAULT '0',
@@ -63,8 +70,7 @@ CREATE TABLE `courses` (
   KEY `idx_category` (`category`),
   KEY `idx_level` (`level`),
   CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`instructor_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 -- ============================================
 -- Table: enrollments
 -- ============================================
@@ -77,12 +83,11 @@ CREATE TABLE `enrollments` (
   `course_id` bigint NOT NULL,
   `student_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UKi0g6mfijtuh199nj653nva6j5` (`student_id`,`course_id`),
+  UNIQUE KEY `UKi0g6mfijtuh199nj653nva6j5` (`student_id`, `course_id`),
   KEY `FKho8mcicp4196ebpltdn9wl6co` (`course_id`),
   CONSTRAINT `FK2lha5vwilci2yi3vu5akusx4a` FOREIGN KEY (`student_id`) REFERENCES `users` (`id`),
   CONSTRAINT `FKho8mcicp4196ebpltdn9wl6co` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 -- ============================================
 -- Table: assignments
 -- ============================================
@@ -108,8 +113,7 @@ CREATE TABLE `assignments` (
   CONSTRAINT `FK67msc7a52b0l2pttoq5bhm6bk` FOREIGN KEY (`teacher_id`) REFERENCES `users` (`id`),
   CONSTRAINT `FK6p1m72jobsvmrrn4bpj4168mg` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
   CONSTRAINT `FKotqcl7qkgnihgxa6x71is49i3` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 -- ============================================
 -- Table: submissions
 -- ============================================
@@ -133,8 +137,7 @@ CREATE TABLE `submissions` (
   KEY `FK3p6y8mnhpwusdgqrdl4hcl72m` (`student_id`),
   CONSTRAINT `FK3p6y8mnhpwusdgqrdl4hcl72m` FOREIGN KEY (`student_id`) REFERENCES `users` (`id`),
   CONSTRAINT `FKrirbb44savy2g7nws0hoxs949` FOREIGN KEY (`assignment_id`) REFERENCES `assignments` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 -- ============================================
 -- Table: notes
 -- ============================================
@@ -157,8 +160,7 @@ CREATE TABLE `notes` (
   KEY `FKdn1o768ox9voi78asnp5mp4mw` (`course_id`),
   CONSTRAINT `FKdn1o768ox9voi78asnp5mp4mw` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
   CONSTRAINT `FKeequ6tj8iu98mxv7jr0nrb98n` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 -- ============================================
 -- Table: study_materials
 -- ============================================
@@ -180,22 +182,34 @@ CREATE TABLE `study_materials` (
   KEY `teacher_id` (`teacher_id`),
   CONSTRAINT `study_materials_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
   CONSTRAINT `study_materials_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 -- ============================================
 -- Insert Default Admin User
 -- Email: admin@lms.com
 -- Password: Admin@123
 -- CHANGE THIS PASSWORD IMMEDIATELY AFTER FIRST LOGIN!
 -- ============================================
-INSERT INTO `users` (`name`, `email`, `password`, `role`, `status`) VALUES 
-('System Administrator', 'admin@lms.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.rL8vUqHLO8xBwOXzSK', 'ADMIN', 'ACTIVE');
-
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+INSERT INTO `users` (`name`, `email`, `password`, `role`, `status`)
+VALUES (
+    'System Administrator',
+    'admin@lms.com',
+    '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.rL8vUqHLO8xBwOXzSK',
+    'ADMIN',
+    'ACTIVE'
+  );
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */
+;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */
+;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */
+;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */
+;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */
+;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */
+;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */
+;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */
+;
